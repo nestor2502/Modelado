@@ -1,8 +1,8 @@
 import requests
 import json
 
-__name__ = '__main__'
-if __name__ == '__main__':
+#__name__ = '__main__'
+if __name__== '__main__':
 	url = 'http://api.openweathermap.org/data/2.5/weather?'
 	args={'q':'mexico', 'APPID': 'eb29ea68cdfba20565899d9af8e2c437'}
 	response= requests.get(url, params = args)
