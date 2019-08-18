@@ -48,11 +48,13 @@ def procesarArchivo(ruta):
 					else:
 						clima_origen = obtenerClima(coordenadasOrigen[0], coordenadasOrigen[1])
 						cache[ciudad_origen]= clima_origen
+						#print(1)
 					if ciudad_destino in cache:
 						clima_destino = cache[ciudad_destino]
 					else:
 						clima_destino = obtenerClima(coordenadasDestino[0], coordenadasDestino[1])
 						cache[ciudad_destino]= clima_destino
+						#print(1)
 				#se obtiene toda la informacion
 				reporte_peticion()
 				print ("Fecha: "  + time.strftime("%x"))
@@ -125,7 +127,7 @@ def comprobarConexion():
 	return check_url('http://www.google.com')
 
 
-procesarArchivo('/home/nestor2502/Modelado/Tarea01/dataset.csv')
+procesarArchivo('/home/nestor2502/Modelado/Tarea01/texto/dataset.csv')
 
 
 
