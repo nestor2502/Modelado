@@ -114,7 +114,7 @@ def obtener_clima(ciudad, coordenada1, coordenada2):
 
 #funcion que genera el reporte general
 def reporte_peticion():
-	time.sleep(0.5)
+	time.sleep(1)
 	j=0
 	temp = cache.keys()
 	for i in cache:
