@@ -131,7 +131,7 @@ def obtenerClima(lat, lon):
 		return datos_generales
 	except:
 		print("No podemos conectarnos con el servidor, intentalo mas tarde")
-		return
+		
 	
 		
 #funcion que devuelve el estado de la conexion
