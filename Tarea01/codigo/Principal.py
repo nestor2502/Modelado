@@ -36,9 +36,7 @@ def procesarArchivo(ruta):
 		return
 	#si el formato es .csv se procede
 	try:
-		print("Obteniendo resultados....\n")
 		#se comprueba que haya una conexion estable
-        
 		if comprobarConexion() == True:
 			#se lee el archivo
 			with open(ruta, 'r') as archivo:
@@ -52,31 +50,23 @@ def procesarArchivo(ruta):
 					linea = i.split(',')
 					ciudad_origen = str(linea[0])
 					ciudad_destino = str(linea[1])
+					coordenadas1 = linea[2]
+					coordenadas2 = linea[3]
+					coordenadas3 = linea[4]
+					coordenadas4 = linea[5]
 					clima_origen = ""
 					clima_destino = ""			
 					se_encuentra_ciudad_origen = ciudad_origen in cache
 					se_encuentra_ciudad_destino = ciudad_destino in cache
 					
 					#si la ciudad de origen no está en cache se busca
-					if se_encuentra_ciudad_origen == False:
+					if se_encuentra_ciudad_origen == False and coordenadas1!="" and coordenadas2!="" and ciudad_origen!="":
 						cache[ciudad_origen]=None
-						"""
-						if __name__ == '__main__':
-							thread = threading.Thread(target =genera_peticion , args=(ciudad_origen, linea[2],linea[3],))
-							thread.start()
-
-							"""
-
-						genera_peticion(ciudad_origen, linea[2],linea[3])
+						ciudades[ciudad_origen]=(linea[2],linea[3])
 						peticiones+=1
-					if se_encuentra_ciudad_destino == False:
+					if se_encuentra_ciudad_destino == False and coordenadas3!=""and coordenadas2!="" and ciudad_destino!="":
 						cache[ciudad_destino]=None
-						"""
-						if __name__ == '__main__':
-							thread = threading.Thread(target =genera_peticion , args=(ciudad_destino, linea[4],linea[5],))
-							thread.start()
-							"""	
-						genera_peticion(ciudad_origen,linea[4],linea[5])	
+						ciudades[ciudad_destino]=(linea[4],linea[5])
 						peticiones+=1
 			peticiones1.append(peticiones)	
 		else:
@@ -86,18 +76,28 @@ def procesarArchivo(ruta):
 	except IOError:
 		print("No se encuentra el archivo")
 
+def  procesar_peticiones():
+	#lista con todas ciudades(llaves)
+	ciudadesTemp = ciudades.keys()
+	j = 0
+	for i in ciudadesTemp:
+		#se obtiene las coordenadas de las ciudades
+		coordenadas = ciudades[ciudadesTemp[j]]
+		#se crea hilo para realizar la peticion
+		thread = threading.Thread(target =genera_peticion , args=(ciudadesTemp[j], coordenadas[0], coordenadas[1],))
+		thread.start()
+		#obtener_clima(ciudadesTemp[j], coordenadas[0], coordenadas[1])
+		j+=1
+
 #Funcion que obtiene el clima de una ciudad
 def genera_peticion(ciudad, coordenada1, coordenada2):
-	
-	#clima = obtenerClima(coordenada1, coordenada2)
-	clima = ("1", "2", "3")
-	cache[ciudad] = clima
-	print(1)
-
+	clima = obtenerClima(coordenada1, coordenada2)
+	#clima = (ciudad, coordenada1, coordenada2)
+	cache[ciudad]= clima
 
 #funcion que genera el reporte general
 def reporte_peticion():
-
+	time.sleep(1)
 	j=0
 	temp = cache.keys()
 	for i in cache:
@@ -131,6 +131,7 @@ def obtenerClima(lat, lon):
 		return datos_generales
 	except:
 		print("No podemos conectarnos con el servidor, intentalo mas tarde")
+		return
 	
 		
 #funcion que devuelve el estado de la conexion
@@ -156,14 +157,21 @@ def comprobarConexion():
 
 	return check_url('http://www.google.com')
 
-#aqui se debe ingresar la ruta donde se encontrará el archivo .csv
-procesarArchivo('/home/nestor2502/Modelado/Tarea01/texto/dataset.csv')
-#se imprimen las ciudades y su temperatura
-reporte_peticion()
-#se imprime fecha y hora
-print ("Fecha: "  + time.strftime("%x"))
-print ("Hora:  " + time.strftime("%X"))
-print("numero de peticiones: "+str(peticiones1))
+if __name__ == '__main__':
+	
+	#aqui se debe ingresar la ruta donde se encontrará el archivo .csv
+	procesarArchivo('/home/nestor2502/Modelado/Tarea01/texto/dataset.csv')
+	t1 = threading.Thread(target=procesar_peticiones)
+	t1.start()
+	t1.join()
+	#se imprimen las ciudades y su temperatura
+	reporte_peticion()
+	#se imprime el numero de ciudades registradas
+	print("Numero de ciudades: "+str(peticiones1))
+	#se imprime fecha y horag
+	print ("Fecha: "  + time.strftime("%x"))
+	print ("Hora:  " + time.strftime("%X"))
+
 
 
 
