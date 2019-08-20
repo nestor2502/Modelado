@@ -91,19 +91,7 @@ def  procesar_peticiones():
 
 #Funcion que obtiene el clima de una ciudad
 def genera_peticion(ciudad, coordenada1, coordenada2):
-	clima = obtenerClima(coordenada1, coordenada2)
-	#clima = (ciudad, coordenada1, coordenada2)
-	cache[ciudad]= clima
-
-#funcion que genera el reporte general
-def reporte_peticion():
-	time.sleep(1)
-	j=0
-	temp = cache.keys()
-	for i in cache:
-		print("Ciudad: "+str(temp[j])+"  Temperatura: "+str(cache[temp[j]]) )
-		print("\n")
-		j+=1
+	print("\nCiudad: "+str(ciudad)+"  Temperatura: "+str(obtenerClima(coordenada1, coordenada2))+"\n")
 
 #se obtiene el clima de una ciudad
 def obtenerClima(lat, lon):
@@ -145,27 +133,21 @@ def get_server_status_code(url):
     except StandardError:
         return None
 
-# función que se encarga de checkear que exista la url a guardar
+# función que se encarga de verificar que exista un url 
 def check_url(url):
-    # Comprobar si existe un URL sin necesidad de descargar todo el archivo. Sólo comprobar el encabezado URL.
-    # variable que se encarga de traer las respuestas
+    # variable que se encarga de traer las respuestas y comprobar si existe un URL 
     codigo = [httplib.OK, httplib.FOUND, httplib.MOVED_PERMANENTLY]
     return get_server_status_code(url) in codigo
 
 #funcion que comprueba la conexion retornando un booleano
 def comprobarConexion():
-
 	return check_url('http://www.google.com')
 
 if __name__ == '__main__':
 	
 	#aqui se debe ingresar la ruta donde se encontrará el archivo .csv
 	procesarArchivo('/home/nestor2502/Modelado/Tarea01/texto/dataset.csv')
-	t1 = threading.Thread(target=procesar_peticiones)
-	t1.start()
-	t1.join()
-	#se imprimen las ciudades y su temperatura
-	reporte_peticion()
+	procesar_peticiones()
 	#se imprime el numero de ciudades registradas
 	print("Numero de ciudades: "+str(peticiones1))
 	#se imprime fecha y horag

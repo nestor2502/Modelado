@@ -9,6 +9,12 @@ para ejecutarlo desde la terminal se usa el siguiente comando:
 
 python Principal.py
 
+Se utiliza la libreria requests, la cual permite obtener un resultado a nuestra peticion, 
+pero se necesita intalarlo para lo cual ejecuta los siguientes comandos para linux:
+
+sudo apt install python-pip
+pip install requests
+
 Aparecerá una lista con todas las ciudades y su respectivo clima donde se detalla la 
 siguiente informacion:
 

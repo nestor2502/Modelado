@@ -12,7 +12,7 @@ class TestPrincipal(unittest.TestCase):
 	def test_verificarArchivo(self):
 		self.assertRaises(Exception,Principal.procesarArchivo('/home/nestor2502/Modelado/Tarea01/dataset.csv'))
 	
-	#Prueva que verifica la conexion a internet	
+	#Prueba que verifica la conexion a internet	
 	def test_conection(self):
 		self.assertEqual(True, Principal.comprobarConexion())
 
