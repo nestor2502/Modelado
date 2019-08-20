@@ -23,7 +23,7 @@ import threading
 ciudades = {}
 #diccionario donde se almacenan las ciudades y su temperatura
 cache = {}
-#peticiones
+#peticiones-x	
 peticiones1 =[]
 #Funcion que procesa todo el archivo
 def procesarArchivo(ruta):
@@ -146,13 +146,11 @@ def comprobarConexion():
 if __name__ == '__main__':
 	
 	#aqui se debe ingresar la ruta donde se encontrará el archivo .csv
-	procesarArchivo('/home/nestor2502/Modelado/Tarea01/texto/dataset.csv')
+	procesarArchivo('/home/nestor/Modelado/Tarea01/texto/dataset.csv')
 	procesar_peticiones()
-	#se imprime el numero de ciudades registradas
-	print("Numero de ciudades: "+str(peticiones1))
-	#se imprime fecha y horag
-	print ("Fecha: "  + time.strftime("%x"))
-	print ("Hora:  " + time.strftime("%X"))
+	pull.join()
+	print("//////////////////////////////////////////7")
+
 
 
 
