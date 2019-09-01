@@ -1,6 +1,8 @@
 #include<stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <omp.h>
+//#include​ ​<omp.h>
 
 int generaRandom(int inicio, int final){
 	int numero, i;
@@ -34,11 +36,7 @@ void quicksort(int arr[] , int a, int b){
                 	j--;
 
                 if ( i <= j) {
-                	swap(&arr[i], &arr[j]);
-                	/**
-                	int tmp = arr[i];
-                    arr[i] = arr[j];
-                    arr[j] = tmp;*/
+                   swap(&arr[i], &arr[j]);
                     i++;
                     j--;
                 }
@@ -68,8 +66,8 @@ int main(){
 		elementos[i]= j;
 
 	}
-	
-	quicksort1(elementos, numeros);
+	quicksort(elementos, 0, numeros-1);
+	//quicksort1(elementos, numeros);
 	for(i=0; i<numeros; i++){
 		
 		printf("%i\n", elementos[i]);
