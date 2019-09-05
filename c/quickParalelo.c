@@ -2,11 +2,37 @@
 #include <stdlib.h>
 #include <time.h>
 #include <omp.h>
+#define SIZE 10000000
+
+/**
+*Llena un arreglo con numeros aleatorios
+*/
+void llenaArreglo(int *arreglo, int size)
+{
+  srand(time(NULL));
+  for(int i = 0; i< size; i++){
+    int r = rand();
+    arreglo[i]= r;
+  }
+}
+
+/**
+*devuelve 1 si esta ordenado 0 si no
+*/
+int isSorted(int *arreglo, int size)
+{
+  int last = arreglo[0];
+  for(int i = 1; i< size; i++){
+    if(last > arreglo[i]) return 0;
+  }
+  return 1;
+}
 
 /**
 *Metodo que ordena dos arreglos ordenados
 */
-void merge(int s[], int sub[][2]){
+void merge(int s[], int sub[][2])
+{
   int tamano = sub[1][1]+1;//longitud del arreglo
   //int arr[tamano]; //arreglo donde se almacenara el numero ordenado
   int *arr = malloc(tamano*sizeof(int));
@@ -41,12 +67,14 @@ void merge(int s[], int sub[][2]){
   }
   for(int z = 0; z<=limite_superior2; z++){//se reasignan los valores delarreglo original
     s[z]= arr[z];}
+    free(arr);
 }
 
 /**
 *Intercambia dos valores
 */
-void swap(int *a , int *b){
+void swap(int *a , int *b)
+{
 	int temp = *a;
 	*a = *b;
 	*b = temp;
@@ -55,7 +83,8 @@ void swap(int *a , int *b){
 *Metodo
 *
 */
-void quicksort(int arr[] , int a, int b){
+void quicksort(int arr[] , int a, int b)
+{
 	if (a < b) {
         int i = a, j = b;
         int pivote = arr[(i + j) / 2];
@@ -74,19 +103,13 @@ void quicksort(int arr[] , int a, int b){
             quicksort(arr, i, b);
 	}}
 
-/**
-*Metodo que aplica quicksort
-*/
-void quicksort1(int a[] , int longitud){
-	quicksort(a, 0, longitud-1);
-	}
 
 /**
 *Metodo que aplica quick paralelo
 */
-void quickParalelo(int a[] , int longitud){
+void quickParallel(int a[] , int longitud)
+{
   int mitad = longitud/2;
-  int inicio1 = 0;
 	int inicio2 =mitad ;
 	int final1 =mitad-1 ;
 	int final2 = longitud-1 ;
@@ -95,24 +118,54 @@ void quickParalelo(int a[] , int longitud){
   sub[0][1]=final1;
   sub[1][0]=inicio2;
   sub[1][1]=final2;
-	quicksort(a, 0, final1);
-	quicksort(a, inicio2, final2);
-	merge(a, sub);
+  #pragma omp parallel sections
+    {
+    #pragma omp section
+  	quicksort(a, 0, final1);
+
+    #pragma omp section
+  	quicksort(a, inicio2, final2);
+
+    }
+  #pragma omp barrierr
+    merge(a, sub);
+
+
 }
 
-int main(){
-	int numeros = 0;
-	//numero de elementos a ingresar
-	scanf("%i", &numeros);
-	int i ;
-	int j =0;
-	int elementos[numeros];
-	for(i=0; i<numeros; i++){
-		scanf("%i",&j);
-		elementos[i]= j;
-	}
-	quickParalelo(elementos, numeros);
-	for(i=0; i<numeros; i++){
-		printf("%i\n", elementos[i]);
-	}
+
+
+int main()
+{
+  int* arreglo = malloc(SIZE * sizeof(int));
+  llenaArreglo(arreglo, SIZE);
+
+  int* arreglo2 = malloc(SIZE * sizeof(int));
+  llenaArreglo(arreglo2, SIZE);
+
+  clock_t t;
+  t = clock();
+
+  quicksort(arreglo, 0, SIZE-1);
+
+  t = clock() -t;
+  double time_taken = ((double)t)/CLOCKS_PER_SEC;
+
+  if(isSorted(arreglo, SIZE))
+  printf("Sequential quicksort with %i elements took %f seconds to execute \n",SIZE, time_taken );
+  else printf("Secuential quicksort doesn't work");
+
+  clock_t z;
+  z = clock();
+
+  quickParallel(arreglo2, SIZE);
+
+  z = clock() -z;
+  double time_taken2 = ((double)z)/CLOCKS_PER_SEC;
+
+  if(isSorted(arreglo2, SIZE))
+  printf("Parallel quicksort with %i elements took %f seconds to execute \n",SIZE, time_taken2 );
+  else printf("Parallel quicksort doesn't work\n");
+
+
 }
